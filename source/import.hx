@@ -77,6 +77,7 @@ import android.os.Build.VERSION_CODES as AndroidVersionCode;
 import llua.Lua;
 import llua.LuaL;
 import llua.State;
+import FunkinLua;
 import llua.Convert;
 #end
 
@@ -97,5 +98,7 @@ import flixel.group.FlxSpriteGroup;
 import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.addons.transition.FlxTransitionableState;
 import flixel.graphics.frames.FlxAtlasFrames;
+
+import openfl.display3D.textures.RectangleTexture;
 
 using StringTools;
