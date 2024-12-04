@@ -55,7 +55,7 @@ import flixel.animation.FlxAnimationController;
 // import animateatlas.AtlasFrameMaker;
 import Achievements;
 import StageData;
-import FunkinLua;
+import psychlua.FunkinLua;
 import DialogueBoxPsych;
 import Conductor.Rating;
 import flixel.system.FlxAssets.FlxShader;
@@ -1423,20 +1423,18 @@ class PlayState extends MusicBeatState
 		    CustomFadeTransitionNOVA.nextCamera = camOther;
 		if(eventNotes.length < 1) checkEventNote();
 	}
-
+	
 	#if (!flash && sys)
 	public var runtimeShaders:Map<String, Array<String>> = new Map<String, Array<String>>();
 	public function createRuntimeShader(name:String):FlxRuntimeShader
 	{
 		if(!ClientPrefs.data.shaders) return new FlxRuntimeShader();
-
 		#if (!flash && MODS_ALLOWED && sys)
 		if(!runtimeShaders.exists(name) && !initLuaShader(name))
 		{
 			FlxG.log.warn('Shader $name is missing!');
 			return new FlxRuntimeShader();
 		}
-
 		var arr:Array<String> = runtimeShaders.get(name);
 		return new FlxRuntimeShader(arr[0], arr[1]);
 		#else
@@ -1444,23 +1442,17 @@ class PlayState extends MusicBeatState
 		return null;
 		#end
 	}
-
 	public function initLuaShader(name:String)
 	{
 		if(!ClientPrefs.data.shaders) return false;
-
 		if(runtimeShaders.exists(name))
 		{
 			FlxG.log.warn('Shader $name was already initialized!');
 			return true;
 		}
-
 		var foldersToCheck:Array<String> = [Paths.getPreloadPath('shaders/')];
-
 		if(Paths.currentModDirectory != null && Paths.currentModDirectory.length > 0)
-
 			foldersToCheck.insert(0, Paths.mods(Paths.currentModDirectory + '/shaders/'));
-
 		for(mod in Paths.getGlobalMods())
 			foldersToCheck.insert(0, Paths.mods(mod + '/shaders/'));
 		
@@ -1477,14 +1469,12 @@ class PlayState extends MusicBeatState
 					found = true;
 				}
 				else frag = null;
-
 				if (FileSystem.exists(vert))
 				{
 					vert = File.getContent(vert);
 					found = true;
 				}
 				else vert = null;
-
 				if(found)
 				{
 					runtimeShaders.set(name, [frag, vert]);
@@ -3934,11 +3924,10 @@ class PlayState extends MusicBeatState
 
 			case 'Set Property':
 				var killMe:Array<String> = value1.split('.');
-				if(killMe.length > 1) {
-					FunkinLua.setVarInArray(FunkinLua.getPropertyLoopThingWhatever(killMe, true, true), killMe[killMe.length-1], value2);
-				} else {
-					FunkinLua.setVarInArray(this, value1, value2);
-				}
+				if(killMe.length > 1)
+					LuaUtils.setVarInArray(LuaUtils.getPropertyLoop(killMe, true, true), killMe[killMe.length-1], value2);
+				else
+					LuaUtils.setVarInArray(this, value1, value2);
 		}
 		callOnLuas('onEvent', [eventName, value1, value2]);
 	}
